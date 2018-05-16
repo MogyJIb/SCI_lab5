@@ -1,0 +1,56 @@
+﻿@model lab4.ViewModels.TourKindViewModel
+
+@{
+    ViewData["Title"] = "Tour Kinds";
+}
+
+<style type="text/css">
+    th, td {
+        padding-right: 15px;
+    }
+</style>
+
+<hr style="border-top: 3px double #8c8b8b;" />
+<div>
+    <form asp-action="Index" class="form-inline" method="post" style=" width:300px;margin:0px auto;">
+        Name: @Html.TextBox("Name", Model.TourKindFilter.Name)
+        &nbsp; &nbsp; &nbsp; &nbsp; <input type="submit" value="Find" />
+    </form>
+
+</div>
+<div style="clear:both"></div>
+<hr style="border-top: 3px double #8c8b8b;" />
+
+<table style="margin:0px auto; width:500px">
+    <caption>Tour kinds</caption>
+    <tr>
+        <th>
+            <a asp-action="Index" asp-route-sortState=@Model.TourKindSort.Models.NameSort>
+                Name
+            </a>
+        </th>
+        <th>
+            <a asp-action="Index" asp-route-sortState=@Model.TourKindSort.Models.DescriptionSort>
+                Description
+            </a>
+        </th>
+        <th>
+            <a asp-action="Index" asp-route-sortState=@Model.TourKindSort.Models.ConstraintsSort>
+                Constraints
+            </a>
+        </th>
+    </tr>
+    @foreach (var tourKind in Model.TourKinds)
+    {
+        <tr>
+            <td>@tourKind.Name</td>
+            <td>@tourKind.Description</td>
+            <td>@tourKind.Constraints</td>
+        </tr>
+    }
+
+</table>
+
+
+<hr style="border-top: 3px double #8c8b8b;" />
+

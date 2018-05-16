@@ -1,0 +1,62 @@
+﻿@model lab4.ViewModels.ClientViewModel
+
+@{
+    ViewData["Title"] = "Clients";
+}
+
+<style type="text/css">
+    th, td {
+        padding-right: 15px;
+    }
+</style>
+
+<hr style="border-top: 3px double #8c8b8b;" />
+<div>
+    <form asp-action="Index" class="form-inline" method="post" style=" width:600px;margin:0px auto;">
+        Name: @Html.TextBox("Name", Model.ClientFIlter.Name)
+        &nbsp; &nbsp; &nbsp; &nbsp; Birthyear: @Html.TextBox("Birthyear", Model.ClientFIlter.Birthyear)
+        &nbsp; &nbsp; &nbsp; &nbsp; <input type="submit" value="Find" />
+    </form>
+</div>
+<hr style="border-top: 3px double #8c8b8b;" />
+
+<table style="margin:0px auto; width:500px">
+    <caption>Clients</caption>
+    <tr>
+        <th>
+            <a asp-action="Index" asp-route-sortState=@Model.ClientSort.Models.NameSort>
+                Name
+            </a>
+        </th>
+        <th>
+            <a asp-action="Index" asp-route-sortState=@Model.ClientSort.Models.BirthdaySort>
+                Birthday
+            </a>
+        </th>
+        <th>
+            <a asp-action="Index" asp-route-sortState=@Model.ClientSort.Models.PhoneSort>
+                Phone number
+            </a>
+        </th>
+        <th>
+            <a asp-action="Index" asp-route-sortState=@Model.ClientSort.Models.AddressSort>
+                Address
+            </a>
+        </th>
+        
+    </tr>
+    @foreach (var client in Model.Clients)
+    {
+        <tr>
+            <td>@client.Name</td>
+            <td>@client.Birthday.ToShortDateString()</td>
+            <td>@client.Phone</td>
+            <td>@client.Address</td>
+        </tr>
+    }
+
+</table>
+
+
+<hr style="border-top: 3px double #8c8b8b;" />
+

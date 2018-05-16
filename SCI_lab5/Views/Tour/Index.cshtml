@@ -1,0 +1,76 @@
+﻿@model lab4.ViewModels.TourViewModel
+
+@{
+    ViewData["Title"] = "Tours";
+}
+
+<style type="text/css">
+    th, td {
+        padding-right: 15px;
+    }
+</style>
+
+<hr style="border-top: 3px double #8c8b8b;" />
+<div>
+    <form asp-action="Index" class="form-inline" method="post" style=" width:900px;margin:0px auto;">
+        Name: @Html.TextBox("Name", Model.TourFilter.Name)
+        &nbsp; &nbsp; &nbsp; &nbsp Client's name: @Html.TextBox("ClientName", Model.TourFilter.ClientName)
+        &nbsp; &nbsp; &nbsp; &nbsp;   Tour kind's name: @Html.TextBox("TourKindName", Model.TourFilter.TourKindName)
+        &nbsp; &nbsp; &nbsp; &nbsp; <input type="submit" value="Find" />
+    </form>
+</div>
+<div style="clear:both"></div>
+<hr style="border-top: 3px double #8c8b8b;" />
+
+<table style="margin:0px auto; width:500px">
+    <caption>Tours</caption>
+    <tr>
+        <th>
+            <a asp-action="Index" asp-route-sortState=@Model.TourSort.Models.NameSort>
+                Name
+            </a>
+        </th>
+        <th>
+            <a asp-action="Index" asp-route-sortState=@Model.TourSort.Models.PriceSort>
+                Price
+            </a>
+        </th>
+        <th>
+            <a asp-action="Index" asp-route-sortState=@Model.TourSort.Models.StartDateSort>
+                Start date
+            </a>
+        </th>
+        <th>
+            <a asp-action="Index" asp-route-sortState=@Model.TourSort.Models.EndDateSort>
+                End date
+            </a>
+        </th>
+        <th>
+            <a asp-action="Index" asp-route-sortState=@Model.TourSort.Models.TourKindSort>
+                Tour kind
+            </a>
+        </th>
+        <th>
+            <a asp-action="Index" asp-route-sortState=@Model.TourSort.Models.ClientSort>
+                Client
+            </a>
+        </th>
+    </tr>
+    @foreach (var tour in Model.Tours)
+    {
+        <tr>
+            <td>@tour.Name</td>
+            <td>@tour.Price</td>
+            <td>@tour.StartDate.ToShortDateString()</td>
+            <td>@tour.EndDate.ToShortDateString()</td>
+            <td>@tour.TourKind.Name</td>
+            <td>@tour.Client.Name</td>
+        </tr>
+    }
+
+</table>
+
+
+<hr style="border-top: 3px double #8c8b8b;" />
+
+
