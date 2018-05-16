@@ -1,5 +1,5 @@
-﻿@model lab4.ViewModels.ClientViewModel
-
+﻿@model SCI_lab5.ViewModels.ClientViewModel
+@addTagHelper "SCI_lab5.Helpers.PageLinkTagHelper, SCI_lab5"
 @{
     ViewData["Title"] = "Clients";
 }
@@ -12,7 +12,7 @@
 
 <hr style="border-top: 3px double #8c8b8b;" />
 <div>
-    <form asp-action="Index" class="form-inline" method="post" style=" width:600px;margin:0px auto;">
+    <form asp-action="Filter" class="form-inline" method="post" style=" width:600px;margin:0px auto;">
         Name: @Html.TextBox("Name", Model.ClientFIlter.Name)
         &nbsp; &nbsp; &nbsp; &nbsp; Birthyear: @Html.TextBox("Birthyear", Model.ClientFIlter.Birthyear)
         &nbsp; &nbsp; &nbsp; &nbsp; <input type="submit" value="Find" />
@@ -24,26 +24,26 @@
     <caption>Clients</caption>
     <tr>
         <th>
-            <a asp-action="Index" asp-route-sortState=@Model.ClientSort.Models.NameSort>
+            <a asp-action="Sort" asp-route-sortState=@Model.ClientSort.Models.NameSort>
                 Name
             </a>
         </th>
         <th>
-            <a asp-action="Index" asp-route-sortState=@Model.ClientSort.Models.BirthdaySort>
+            <a asp-action="Sort" asp-route-sortState=@Model.ClientSort.Models.BirthdaySort>
                 Birthday
             </a>
         </th>
         <th>
-            <a asp-action="Index" asp-route-sortState=@Model.ClientSort.Models.PhoneSort>
+            <a asp-action="Sort" asp-route-sortState=@Model.ClientSort.Models.PhoneSort>
                 Phone number
             </a>
         </th>
         <th>
-            <a asp-action="Index" asp-route-sortState=@Model.ClientSort.Models.AddressSort>
+            <a asp-action="Sort" asp-route-sortState=@Model.ClientSort.Models.AddressSort>
                 Address
             </a>
         </th>
-        
+
     </tr>
     @foreach (var client in Model.Clients)
     {
@@ -56,6 +56,7 @@
     }
 
 </table>
+<page-link page-model="@Model.PageViewModel" page-action="Index"></page-link>
 
 
 <hr style="border-top: 3px double #8c8b8b;" />

@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using System.Collections.Generic;
 
-namespace lab4.Extensions
+namespace SCI_lab5.Extensions
 {
     public static class SessionExtensions
     {

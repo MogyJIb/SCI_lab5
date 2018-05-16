@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace lab4.Utils
+namespace SCI_lab5.Utils
 {
     public static class Converter
     {

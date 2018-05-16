@@ -1,15 +1,16 @@
 ﻿using DbDataLibrary.Models;
-using lab4.Models.Filters;
-using lab4.Models.Sorts;
+using SCI_lab5.Models.Filters;
+using SCI_lab5.Models.Sorts;
 using System.Collections.Generic;
 
-namespace lab4.ViewModels
+namespace SCI_lab5.ViewModels
 {
     public class TourViewModel
     {
         public IEnumerable<Tour> Tours { get; set; }
         public TourFilter TourFilter { get; set; }
         public TourSort TourSort { get; set; }
+        public PageViewModel PageViewModel { get; set; }
 
         public TourViewModel()
         {

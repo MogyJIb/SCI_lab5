@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace lab4.Utils
+namespace SCI_lab5.Utils
 {
     public class Constants
     {
@@ -26,6 +26,12 @@ namespace lab4.Utils
         public const string ClientFilter = "Client filter",
             TourFilter = "Tour filter",
             TourKindFilter = "TourKind filter";
+
+        public const string ClientPageNumber = "Client page number",
+            TourPageNumber = "Tour page number",
+            TourKindPageNumber = "TourKind page number";
+
+        
 
     }
 }

@@ -2,16 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DbDataLibrary.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using ChemistShopSite.Models;
+using SCI_lab5.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using SCI_lab5.Data;
+using SCI_lab5.Middleware;
+using SCI_lab5.Services;
 
-namespace ChemistShopSite
+namespace SCI_lab5
 {
     public class Startup
     {
@@ -25,16 +29,22 @@ namespace ChemistShopSite
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddTransient<MedicamentsContext>();
+            services.AddTransient<ToursSqliteDbContext>();
             services.AddMemoryCache();
             services.AddResponseCaching();
             services.AddDistributedMemoryCache();
             services.AddSession();
 
-            services.AddDbContext<AccountContext>(options =>
+            services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlite(Configuration.GetConnectionString("SqliteUserConnection")));
-            services.AddIdentity<User, IdentityRole>()
-                .AddEntityFrameworkStores<AccountContext>();
+
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
+
+            // Add application services.
+            services.AddTransient<IEmailSender, EmailSender>();
+            
 
             services.AddMvc(options =>
             {
@@ -56,9 +66,6 @@ namespace ChemistShopSite
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            app.UseLastElementCache();
-            app.UseSession();
-            app.UseAuthentication();
 
             if (env.IsDevelopment())
             {
@@ -71,7 +78,11 @@ namespace ChemistShopSite
             }
             
             app.UseStaticFiles();
+            app.UseSession();
             app.UseResponseCaching();
+            app.UseAuthentication();
+            app.UseDbInitializer();
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

@@ -1,83 +1,121 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Identity;
-using ChemistShopSite.Models;
-using ChemistShopSite.ViewModels;
-using lab4.Extensions.Filters;
+﻿
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using SCI_lab5.Data;
+using SCI_lab5.Models;
+using SCI_lab5.ViewModels;
 
-namespace ChemistShopSite.Controllers
+namespace SCI_lab5.Controllers
 {
-    [TypeFilter(typeof(LogFilter))]
-    [ExceptionFilter]
-    [Authorize(Roles = "admin")]
+      
     public class UsersController : Controller
     {
-        UserManager<User> _userManager;
+        UserManager<ApplicationUser> _userManager;
         RoleManager<IdentityRole> _roleManager;
-        public UsersController(UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
+        private readonly ApplicationDbContext _context;
+
+        public UsersController(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager, ApplicationDbContext context)
         {
-            _userManager = userManager;
             _roleManager = roleManager;
+            _userManager = userManager;
+            _context = context;
         }
 
-        public IActionResult Index() => Redirect("/Users/UsersView");
-
-        public IActionResult UsersView() => View(_userManager.Users.ToList());
-
-        public IActionResult Create() => View();
-
-        [HttpPost]
-        public async Task<IActionResult> Create(RegisterViewModel model)
+        public async Task<IActionResult> Users()
         {
-            if (ModelState.IsValid)
-            {
-                User user = new User { Email = model.Email, UserName = model.Login };
-                var result = await _userManager.CreateAsync(user, model.Password);
+            var users = _userManager.Users.OrderBy(user => user.Id);
 
-                if (result.Succeeded)
+            List<ApplicationUserViewModel> userViewModel = new List<ApplicationUserViewModel>();
+
+            string urole = "";
+            foreach (var user in users)
+            {
+                var userRoles = await _userManager.GetRolesAsync(user);
+                if (userRoles.Count() > 0)
                 {
-                    await _userManager.AddToRoleAsync(user, "user");
-                    return RedirectToAction("Index");
+                    urole = userRoles[0] ?? "";
                 }
-                else
-                {
-                    foreach (var error in result.Errors)
+
+
+                userViewModel.Add(
+                    new ApplicationUserViewModel
                     {
-                        ModelState.AddModelError(string.Empty, error.Description);
-                    }
-                }
+                        Id = user.Id,
+                        UserName = user.UserName,
+                        Email = user.Email,
+                        RoleName = urole
+                    });
+
             }
-            return View(model);
+
+            return View(userViewModel);
         }
+
 
         public async Task<IActionResult> Edit(string id)
         {
-            User user = await _userManager.FindByIdAsync(id);
+            ApplicationUser user = await _userManager.FindByIdAsync(id);
             if (user == null)
             {
                 return NotFound();
             }
-            EditUserViewModel model = new EditUserViewModel { Id = user.Id, Email = user.Email, Login = user.UserName };
+
+            var userRoles = await _userManager.GetRolesAsync(user);
+            var allRoles = _roleManager.Roles.ToList();
+            string userRole = "";
+            if (userRoles.Count() > 0)
+            {
+                userRole = userRoles[0] ?? "";
+            }
+
+            ApplicationUserViewModel model = new ApplicationUserViewModel
+            {
+                Id = user.Id,
+                Email = user.Email,
+                UserName = user.UserName,
+                RoleName = userRole
+            };
+
+
+            ViewData["RoleName"] = new SelectList(allRoles, "Name", "Name", model.RoleName);
             return View(model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(EditUserViewModel model)
+        public async Task<IActionResult> Edit(ApplicationUserViewModel model)
         {
             if (ModelState.IsValid)
             {
-                User user = await _userManager.FindByIdAsync(model.Id);
+                ApplicationUser user = await _userManager.FindByIdAsync(model.Id);
                 if (user != null)
                 {
+
+                    var oldRoles = await _userManager.GetRolesAsync(user);
+
+                    if (oldRoles.Count() > 0)
+                    {
+                        await _userManager.RemoveFromRolesAsync(user, oldRoles);
+
+                    }
+
+                    var newRole = model.RoleName;
+                    if (newRole.Count() > 0)
+                    {
+                        await _userManager.AddToRoleAsync(user, newRole);
+                    }
                     user.Email = model.Email;
-                    user.UserName = model.Login;
+                    user.UserName = model.UserName;
 
                     var result = await _userManager.UpdateAsync(user);
                     if (result.Succeeded)
                     {
-                        return RedirectToAction("Index");
+                        return RedirectToAction("Users");
                     }
                     else
                     {
@@ -94,12 +132,12 @@ namespace ChemistShopSite.Controllers
         [HttpPost]
         public async Task<ActionResult> Delete(string id)
         {
-            User user = await _userManager.FindByIdAsync(id);
+            ApplicationUser user = await _userManager.FindByIdAsync(id);
             if (user != null)
             {
                 IdentityResult result = await _userManager.DeleteAsync(user);
             }
-            return RedirectToAction("Index");
+            return RedirectToAction("Users");
         }
     }
 }

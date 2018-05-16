@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace lab4.Extensions.Filters
+namespace SCI_lab5.Extensions.Filters
 {
     public class SetToSessionAttribute : Attribute, IActionFilter
     {

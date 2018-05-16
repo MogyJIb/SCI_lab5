@@ -1,4 +1,4 @@
-﻿namespace lab4.Models.Sorts
+﻿namespace SCI_lab5.Models.Sorts
 {
     public class TourSort
     {

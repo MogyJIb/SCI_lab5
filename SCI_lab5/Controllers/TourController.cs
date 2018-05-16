@@ -1,17 +1,17 @@
 ﻿using DbDataLibrary.Data;
 using DbDataLibrary.Models;
-using lab4.Extensions;
-using lab4.Models.Sorts;
-using lab4.Models.Filters;
-using lab4.Utils;
-using lab4.ViewModels;
+using SCI_lab5.Extensions;
+using SCI_lab5.Models.Sorts;
+using SCI_lab5.Models.Filters;
+using SCI_lab5.Utils;
+using SCI_lab5.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
-using lab4.Extensions.Filters;
+using SCI_lab5.Extensions.Filters;
 using System;
 using Microsoft.EntityFrameworkCore;
 
-namespace lab4.Controllers
+namespace SCI_lab5.Controllers
 {
     [ExceptionFilter]
     [TypeFilter(typeof(LogFilter))]
@@ -25,8 +25,31 @@ namespace lab4.Controllers
         }
 
         [HttpGet]
+        public IActionResult Index(int pageNumber = 1)
+        {
+            TourViewModel viewModel = new TourViewModel();
+
+            var sessionFilter = HttpContext.Session.Get(Constants.TourFilter);
+            if (sessionFilter != null)
+                viewModel.TourFilter = Converter.DictionaryToObject<TourFilter>(sessionFilter);
+            var sessionSortState = HttpContext.Session.Get(Constants.TourSort);
+            if (sessionSortState != null && sessionSortState.Count > 0)
+            {
+                TourSort.State currSortState = (TourSort.State)Enum.Parse(typeof(TourSort.State), sessionSortState["sortState"]);
+                viewModel.TourSort = new TourSort(currSortState);
+            }
+        
+
+            HttpContext.Session.Set<int>(Constants.ClientPageNumber, pageNumber);
+            SetTours(viewModel, pageNumber);
+
+            return View(viewModel);
+        }
+
+
+        [HttpGet]
         [SetToSession(Constants.TourSort)]
-        public IActionResult Index(TourSort.State sortState = TourSort.State.NoSort)
+        public IActionResult Sort(TourSort.State sortState = TourSort.State.NoSort)
         {
             TourViewModel viewModel = new TourViewModel();
 
@@ -34,15 +57,16 @@ namespace lab4.Controllers
             if (sessionFilter != null)
                 viewModel.TourFilter = Converter.DictionaryToObject<TourFilter>(sessionFilter);
             viewModel.TourSort = new TourSort(sortState);
+            int pageNumber = HttpContext.Session.Get<int>(Constants.ClientPageNumber);
+            if (pageNumber < 1) pageNumber = 1;
+            SetTours(viewModel, pageNumber);
 
-            SetTours(viewModel);
-
-            return View(viewModel);
+            return View("Index", viewModel);
         }
 
         [HttpPost]
         [SetToSession(Constants.TourFilter)]
-        public IActionResult Index(TourFilter tourFilter)
+        public IActionResult Filter(TourFilter tourFilter)
         {
             TourViewModel viewModel = new TourViewModel();
 
@@ -53,13 +77,14 @@ namespace lab4.Controllers
                 viewModel.TourSort = new TourSort(currSortState);
             }
             viewModel.TourFilter = tourFilter;
+            int pageNumber = HttpContext.Session.Get<int>(Constants.ClientPageNumber);
+            if (pageNumber < 1) pageNumber = 1;
+            SetTours(viewModel, pageNumber);
 
-            SetTours(viewModel);
-
-            return View(viewModel);
+            return View("Index", viewModel);
         }
 
-        private void SetTours(TourViewModel viewModel)
+        private void SetTours(TourViewModel viewModel ,int pageNumber)
         {
             var tours = _db.Tours.Include(t=> t.Client).Include(t => t.TourKind).ToList();
             switch (viewModel.TourSort.Models.CurrentState)
@@ -124,6 +149,10 @@ namespace lab4.Controllers
                 viewModel.TourFilter.TourKindName = "";
             else if (tourKindName != "")
                 tours = tours.Where(t => t.TourKind.Name.Contains(tourKindName)).ToList();
+
+            int pageSize = 10;
+            viewModel.PageViewModel = new PageViewModel(tours.Count(), pageNumber, pageSize);
+            tours = tours.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
 
             viewModel.Tours = tours;
         }

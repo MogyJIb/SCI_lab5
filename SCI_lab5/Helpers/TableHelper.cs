@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using ChemistShopSite.Models;
+using SCI_lab5.Models;
 using System.Collections.Generic;
 using System;
 using System.Linq;

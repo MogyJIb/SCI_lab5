@@ -1,6 +1,6 @@
 using System;
 
-namespace lab4.ViewModels
+namespace SCI_lab5.ViewModels
 {
     public class ErrorViewModel
     {

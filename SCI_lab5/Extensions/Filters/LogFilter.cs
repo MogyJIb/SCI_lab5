@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
 
-namespace lab4.Extensions.Filters
+namespace SCI_lab5.Extensions.Filters
 {
     public class LogFilter : Attribute, IActionFilter
     {

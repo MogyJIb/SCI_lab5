@@ -1,23 +1,36 @@
-﻿@model ChemistShopSite.ViewModels.EditUserViewModel
+﻿@model SCI_lab5.ViewModels.ApplicationUserViewModel
 @{
-    ViewData["Title"] = "Edit user";
+    ViewBag.Title = "User edit";
 }
-
-@using (Html.BeginForm("Edit", "Users", FormMethod.Post))
-{
-    <div asp-validation-summary="ModelOnly"></div>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h2>Редактировать</h2>
+<form asp-action="Edit" asp-controller="Users">
+    <h4>Пользователь</h4>
+    <hr />
+    <div asp-validation-summary="All" class="text-danger"></div>
     <div class="form-group">
         <input type="hidden" asp-for="Id" />
     </div>
     <div class="form-group">
-        <label asp-for="Email" class="control-label">Email</label>
+        <label asp-for="UserName" class="control-label  col-md-2">Name</label>
+        <input type="text" asp-for="UserName" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Email" class="control-label  col-md-2">Email</label>
         <input type="text" asp-for="Email" class="form-control" />
     </div>
+  
     <div class="form-group">
-        <label asp-for="Login" class="control-label">Login</label>
-        <input type="text" asp-for="Login" class="form-control" />
+        <label asp-for="RoleName" class="control-label col-md-2"></label>
+        <select asp-for="RoleName" class="form-control" asp-items="ViewBag.RoleName"></select>
+        <span asp-validation-for="RoleName" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <input type="submit" value="Save" class="btn btn-success" />
+        <input type="submit" value="Сохранить" class="btn btn-warning" />
     </div>
-}
+</form>
+<div>
+    <a asp-action="Users" class="btn btn-sm btn-primary">Back</a>
+</div>

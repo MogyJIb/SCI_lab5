@@ -1,16 +1,16 @@
 ﻿using DbDataLibrary.Data;
 using DbDataLibrary.Models;
-using lab4.Extensions;
-using lab4.Models.Sorts;
-using lab4.Models.Filters;
-using lab4.Utils;
-using lab4.ViewModels;
+using SCI_lab5.Extensions;
+using SCI_lab5.Models.Sorts;
+using SCI_lab5.Models.Filters;
+using SCI_lab5.Utils;
+using SCI_lab5.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
-using lab4.Extensions.Filters;
+using SCI_lab5.Extensions.Filters;
 using System;
 
-namespace lab4.Controllers
+namespace SCI_lab5.Controllers
 {
 
     [TypeFilter(typeof(LogFilter))]
@@ -25,8 +25,30 @@ namespace lab4.Controllers
         }
 
         [HttpGet]
+        public IActionResult Index(int pageNumber = 1)
+        {
+            ClientViewModel viewModel = new ClientViewModel();
+
+            var sessionFilter = HttpContext.Session.Get(Constants.ClientFilter);
+            if (sessionFilter != null)
+                viewModel.ClientFIlter = Converter.DictionaryToObject<ClientFilter>(sessionFilter);
+           
+            var sessionSortState = HttpContext.Session.Get(Constants.ClientSort);
+            if (sessionSortState != null && sessionSortState.Count > 0)
+            {
+                ClientSort.State currSortState = (ClientSort.State)Enum.Parse(typeof(ClientSort.State), sessionSortState["sortState"]);
+                viewModel.ClientSort = new ClientSort(currSortState);
+            }
+
+            HttpContext.Session.Set<int>(Constants.ClientPageNumber,pageNumber);
+            SetClients(viewModel, pageNumber);
+
+            return View(viewModel);
+        }
+
+        [HttpGet]
         [SetToSession(Constants.ClientSort)]
-        public IActionResult Index(ClientSort.State sortState = ClientSort.State.NoSort)
+        public IActionResult Sort(ClientSort.State sortState = ClientSort.State.NoSort)
         {
             ClientViewModel viewModel = new ClientViewModel();
           
@@ -35,14 +57,18 @@ namespace lab4.Controllers
                  viewModel.ClientFIlter = Converter.DictionaryToObject<ClientFilter>(sessionFilter);
             viewModel.ClientSort = new ClientSort(sortState);
 
-            SetClients(viewModel);
+            int pageNumber = HttpContext.Session.Get<int>(Constants.ClientPageNumber);
+            if (pageNumber < 1) pageNumber = 1;
+        
 
-            return View(viewModel);
+            SetClients(viewModel,pageNumber);
+
+            return View("Index",viewModel);
         }
 
         [HttpPost]
         [SetToSession(Constants.ClientFilter)]
-        public IActionResult Index(ClientFilter clientFilter)
+        public IActionResult Filter(ClientFilter clientFilter)
         {
             ClientViewModel viewModel = new ClientViewModel();
 
@@ -54,14 +80,20 @@ namespace lab4.Controllers
             }
             viewModel.ClientFIlter = clientFilter;
 
-            SetClients(viewModel);
+            int pageNumber = HttpContext.Session.Get<int>(Constants.ClientPageNumber);
+            if (pageNumber < 1) pageNumber = 1;
 
-            return View(viewModel);
+            SetClients(viewModel, pageNumber);
+
+            return View("Index",viewModel);
         }
 
-        private void SetClients(ClientViewModel viewModel)
+        private void SetClients(ClientViewModel viewModel, int pageNumber)
         {
             var clients = _db.Clients.ToList();
+
+            
+
             switch (viewModel.ClientSort.Models.CurrentState)
             {
                 case ClientSort.State.NameAsc:
@@ -107,6 +139,10 @@ namespace lab4.Controllers
                 viewModel.ClientFIlter.Name = "";
             else if (name != "")
                 clients = clients.Where(t => t.Name.Contains(name)).ToList();
+
+            int pageSize = 10;
+            viewModel.PageViewModel = new PageViewModel(clients.Count(), pageNumber, pageSize);
+            clients = clients.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
 
             viewModel.Clients = clients;
         }

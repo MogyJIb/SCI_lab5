@@ -1,5 +1,5 @@
-﻿@model lab4.ViewModels.TourKindViewModel
-
+﻿@model SCI_lab5.ViewModels.TourKindViewModel
+@addTagHelper "SCI_lab5.Helpers.PageLinkTagHelper, SCI_lab5"
 @{
     ViewData["Title"] = "Tour Kinds";
 }
@@ -12,7 +12,7 @@
 
 <hr style="border-top: 3px double #8c8b8b;" />
 <div>
-    <form asp-action="Index" class="form-inline" method="post" style=" width:300px;margin:0px auto;">
+    <form asp-action="Filter" class="form-inline" method="post" style=" width:300px;margin:0px auto;">
         Name: @Html.TextBox("Name", Model.TourKindFilter.Name)
         &nbsp; &nbsp; &nbsp; &nbsp; <input type="submit" value="Find" />
     </form>
@@ -25,17 +25,17 @@
     <caption>Tour kinds</caption>
     <tr>
         <th>
-            <a asp-action="Index" asp-route-sortState=@Model.TourKindSort.Models.NameSort>
+            <a asp-action="Sort" asp-route-sortState=@Model.TourKindSort.Models.NameSort>
                 Name
             </a>
         </th>
         <th>
-            <a asp-action="Index" asp-route-sortState=@Model.TourKindSort.Models.DescriptionSort>
+            <a asp-action="Sort" asp-route-sortState=@Model.TourKindSort.Models.DescriptionSort>
                 Description
             </a>
         </th>
         <th>
-            <a asp-action="Index" asp-route-sortState=@Model.TourKindSort.Models.ConstraintsSort>
+            <a asp-action="Sort" asp-route-sortState=@Model.TourKindSort.Models.ConstraintsSort>
                 Constraints
             </a>
         </th>
@@ -51,6 +51,7 @@
 
 </table>
 
+<page-link page-model="@Model.PageViewModel" page-action="Index"></page-link>
 
 <hr style="border-top: 3px double #8c8b8b;" />
 

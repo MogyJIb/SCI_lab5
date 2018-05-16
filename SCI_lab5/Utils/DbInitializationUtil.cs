@@ -1,6 +1,6 @@
 ﻿using DbDataLibrary.Data;
 
-namespace lab4.Utils
+namespace SCI_lab5.Utils
 {
     public class DbInitializationUtil
     {

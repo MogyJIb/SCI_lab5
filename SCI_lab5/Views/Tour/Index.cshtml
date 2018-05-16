@@ -1,5 +1,5 @@
-﻿@model lab4.ViewModels.TourViewModel
-
+﻿@model SCI_lab5.ViewModels.TourViewModel
+@addTagHelper "SCI_lab5.Helpers.PageLinkTagHelper, SCI_lab5"
 @{
     ViewData["Title"] = "Tours";
 }
@@ -12,7 +12,7 @@
 
 <hr style="border-top: 3px double #8c8b8b;" />
 <div>
-    <form asp-action="Index" class="form-inline" method="post" style=" width:900px;margin:0px auto;">
+    <form asp-action="Filter" class="form-inline" method="post" style=" width:900px;margin:0px auto;">
         Name: @Html.TextBox("Name", Model.TourFilter.Name)
         &nbsp; &nbsp; &nbsp; &nbsp Client's name: @Html.TextBox("ClientName", Model.TourFilter.ClientName)
         &nbsp; &nbsp; &nbsp; &nbsp;   Tour kind's name: @Html.TextBox("TourKindName", Model.TourFilter.TourKindName)
@@ -26,17 +26,17 @@
     <caption>Tours</caption>
     <tr>
         <th>
-            <a asp-action="Index" asp-route-sortState=@Model.TourSort.Models.NameSort>
+            <a asp-action="Sort" asp-route-sortState=@Model.TourSort.Models.NameSort>
                 Name
             </a>
         </th>
         <th>
-            <a asp-action="Index" asp-route-sortState=@Model.TourSort.Models.PriceSort>
+            <a asp-action="Sort" asp-route-sortState=@Model.TourSort.Models.PriceSort>
                 Price
             </a>
         </th>
         <th>
-            <a asp-action="Index" asp-route-sortState=@Model.TourSort.Models.StartDateSort>
+            <a asp-action="Sort" asp-route-sortState=@Model.TourSort.Models.StartDateSort>
                 Start date
             </a>
         </th>
@@ -70,6 +70,7 @@
 
 </table>
 
+<page-link page-model="@Model.PageViewModel" page-action="Index"></page-link>
 
 <hr style="border-top: 3px double #8c8b8b;" />
 
