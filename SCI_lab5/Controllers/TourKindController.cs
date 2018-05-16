@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using SCI_lab5.Extensions.Filters;
 using System;
+using System.Diagnostics;
+using Microsoft.EntityFrameworkCore;
 
 namespace SCI_lab5.Controllers
 {
@@ -83,6 +85,152 @@ namespace SCI_lab5.Controllers
 
             return View("Index", viewModel);
         }
+
+        // GET: Brands/Edit/5
+        public IActionResult Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var tourKind = getTourKindById(id);
+
+            if (tourKind == null)
+            {
+                return NotFound();
+            }
+
+            return View(tourKind);
+        }
+
+
+        // POST: Brands/Edit/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(TourKind tourKind)
+        {
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _db.Update(tourKind);
+                    _db.SaveChanges();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!TourKindsExists(tourKind.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction("Index");
+            }
+            return View(tourKind);
+        }
+
+
+        // GET: Brands/Create
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        // POST: Brands/Create
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Create(TourKind tourKind)
+        {
+            if (ModelState.IsValid)
+            {
+                if (TourKindsExists(tourKind.Id))
+                {
+                    return View(tourKind);
+                }
+                _db.Add(tourKind);
+                _db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+
+            return View(tourKind);
+        }
+
+
+        // GET: Brands/Details/5
+        public IActionResult More(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var tourKind = getTourKindById(id);
+
+            if (tourKind == null)
+            {
+                return NotFound();
+            }
+
+            return View(tourKind);
+        }
+
+
+
+        // GET: Brands/Delete/5
+        public IActionResult Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var tourKind = getTourKindById(id);
+
+            if (tourKind == null)
+            {
+                return NotFound();
+            }
+
+            return View(tourKind);
+        }
+
+        // POST: Brands/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public IActionResult DeleteConfirmed(int Id)
+        {
+            var tourKind = getTourKindById(Id);
+            _db.TourKinds.RemoveRange(tourKind);
+            var tours = _db.Tours.Where(c => c.TourKindId == Id);
+            _db.Tours.RemoveRange(tours);
+            _db.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
+        private bool TourKindsExists(int id)
+        {
+            return _db.TourKinds.Any(e => e.Id == id);
+        }
+
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        private TourKind getTourKindById(int? id)
+        {
+            return _db.TourKinds.Where(e => e.Id == id).ToList()[0];
+        }
+
 
         private void SetTourKinds(TourKindViewModel viewModel, int pageNumber)
         {

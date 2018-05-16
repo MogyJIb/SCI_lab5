@@ -1,5 +1,7 @@
-﻿@model SCI_lab5.ViewModels.TourKindViewModel
+﻿@using SCI_lab5.Helpers
+@model SCI_lab5.ViewModels.TourKindViewModel
 @addTagHelper "SCI_lab5.Helpers.PageLinkTagHelper, SCI_lab5"
+@addTagHelper "SCI_lab5.Helpers.TableHelter, SCI_lab5"
 @{
     ViewData["Title"] = "Tour Kinds";
 }
@@ -40,14 +42,7 @@
             </a>
         </th>
     </tr>
-    @foreach (var tourKind in Model.TourKinds)
-    {
-        <tr>
-            <td>@tourKind.Name</td>
-            <td>@tourKind.Description</td>
-            <td>@tourKind.Constraints</td>
-        </tr>
-    }
+    @Html.CreateTourKindsList(Model.TourKinds)
 
 </table>
 

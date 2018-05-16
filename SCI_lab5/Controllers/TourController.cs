@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using SCI_lab5.Extensions.Filters;
 using System;
+using System.Diagnostics;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace SCI_lab5.Controllers
@@ -83,6 +85,164 @@ namespace SCI_lab5.Controllers
 
             return View("Index", viewModel);
         }
+
+        // GET: Brands/Edit/5
+        public IActionResult Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var tour = getTourById(id);
+
+            if (tour == null)
+            {
+                return NotFound();
+            }
+            ViewData["TourKindId"] = new SelectList(_db.TourKinds, "TourKindId", "Name", tour.TourKindId);
+            ViewData["ClientId"] = new SelectList(_db.Clients, "ClientId", "Name", tour.ClientId);
+
+
+            return View(tour);
+        }
+
+
+        // POST: Brands/Edit/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(Tour tour)
+        {
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _db.Update(tour);
+                    _db.SaveChanges();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!ToursExists(tour.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction("Index");
+            }
+
+            ViewData["TourKindId"] = new SelectList(_db.TourKinds, "TourKindId", "Name", tour.TourKindId);
+            ViewData["ClientId"] = new SelectList(_db.Clients, "ClientId", "Name", tour.ClientId);
+
+            return View(tour);
+        }
+
+
+        // GET: Brands/Create
+        public IActionResult Create()
+        {
+            ViewData["TourKindId"] = new SelectList(_db.TourKinds, "TourKindId", "Name");
+            ViewData["ClientId"] = new SelectList(_db.Clients, "ClientId", "Name");
+
+            return View();
+        }
+
+        // POST: Brands/Create
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Create(Tour tour)
+        {
+            if (ModelState.IsValid)
+            {
+                if (ToursExists(tour.Id))
+                {
+                    return View(tour);
+                }
+                _db.Add(tour);
+                _db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            ViewData["TourKindId"] = new SelectList(_db.TourKinds, "TourKindId", "Name", tour.TourKindId);
+            ViewData["ClientId"] = new SelectList(_db.Clients, "ClientId", "Name", tour.ClientId);
+
+            return View(tour);
+        }
+
+
+        // GET: Brands/Details/5
+        public IActionResult More(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var tour = getTourById(id);
+
+            if (tour == null)
+            {
+                return NotFound();
+            }
+
+            return View(tour);
+        }
+
+
+
+        // GET: Brands/Delete/5
+        public IActionResult Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var tour = getTourById(id);
+
+            if (tour == null)
+            {
+                return NotFound();
+            }
+
+            return View(tour);
+        }
+
+        // POST: Brands/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public IActionResult DeleteConfirmed(int Id)
+        {
+            var tour = getTourById(Id);
+            _db.Tours.RemoveRange(tour);
+           
+            _db.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
+        private bool ToursExists(int id)
+        {
+            return _db.Tours.Any(e => e.Id == id);
+        }
+
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        private Tour getTourById(int? id)
+        {
+            return _db.Tours.Include(t => t.Client)
+                .Include(t => t.TourKind).Where(e => e.Id == id).ToList()[0];
+        }
+
 
         private void SetTours(TourViewModel viewModel ,int pageNumber)
         {

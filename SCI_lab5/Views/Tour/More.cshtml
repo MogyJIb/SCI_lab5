@@ -1,0 +1,67 @@
+﻿@model Tour
+@{
+    ViewData["Title"] = "Tour";
+   
+}
+<style type="text/css">
+    td {
+        padding-right:20px;
+    }
+    .boldTd{
+        font-weight:bold;
+    }
+</style>
+
+
+
+
+
+<h2>Detail</h2>
+<div>
+    <h4>Tour</h4>
+    <table >
+        <tr>
+              <td style="vertical-align:top;">
+                  <table style="margin:20px;">
+                      <tr>
+                          <td class="boldTd"> @Html.DisplayNameFor(c => c.Id)</td>
+                          <td> @Html.DisplayFor(c => c.Id) </td>
+                      </tr>
+                      <tr>
+                          <td class="boldTd"> @Html.DisplayNameFor(c => c.Name)</td>
+                          <td> @Html.DisplayFor(c => c.Name) </td>
+                      </tr>
+                      <tr>
+                          <td class="boldTd"> @Html.DisplayNameFor(c => c.Client.Name)</td>
+                          <td> @Html.DisplayFor(c => c.Client.Name) </td>
+                      </tr>
+                      <tr>
+                          <td class="boldTd"> @Html.DisplayNameFor(c => c.TourKind.Name)</td>
+                          <td> @Html.DisplayFor(c => c.TourKind.Name) </td>
+                      </tr>
+
+
+                      <tr>
+                          <td class="boldTd"> @Html.DisplayNameFor(c => c.Price)</td>
+                          <td> @Html.DisplayFor(c => c.Price) </td>
+                      </tr>
+                      <tr>
+                          <td class="boldTd"> @Html.DisplayNameFor(c => c.StartDate)</td>
+                          <td> @Html.DisplayFor(c => c.StartDate) </td>
+                      </tr>
+                      <tr>
+                          <td class="boldTd"> @Html.DisplayNameFor(c => c.EndDate)</tdv>
+                          <td> @Html.DisplayFor(c => c.EndDate) </td>
+                      </tr>
+                  </table>
+            </td>
+        </tr>
+    </table>
+    
+    
+
+</div>
+
+<div>
+    <a asp-action="Index" class="btn btn-sm btn-primary">Back</a>
+</div>

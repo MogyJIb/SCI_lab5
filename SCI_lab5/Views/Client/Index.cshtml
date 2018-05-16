@@ -1,5 +1,7 @@
-﻿@model SCI_lab5.ViewModels.ClientViewModel
+﻿@using SCI_lab5.Helpers
+@model SCI_lab5.ViewModels.ClientViewModel
 @addTagHelper "SCI_lab5.Helpers.PageLinkTagHelper, SCI_lab5"
+@addTagHelper "SCI_lab5.Helpers.TableHelper, SCI_lab5"
 @{
     ViewData["Title"] = "Clients";
 }
@@ -45,16 +47,7 @@
         </th>
 
     </tr>
-    @foreach (var client in Model.Clients)
-    {
-        <tr>
-            <td>@client.Name</td>
-            <td>@client.Birthday.ToShortDateString()</td>
-            <td>@client.Phone</td>
-            <td>@client.Address</td>
-        </tr>
-    }
-
+    @Html.CreateClientsList(Model.Clients) 
 </table>
 <page-link page-model="@Model.PageViewModel" page-action="Index"></page-link>
 

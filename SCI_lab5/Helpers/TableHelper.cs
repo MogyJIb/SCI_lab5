@@ -20,9 +20,53 @@ namespace SCI_lab5.Helpers
                 result += $"<td>{client.Birthday.ToShortDateString()}</td>";
                 result += $"<td>{ @client.Phone}</td>";
                 result += $"<td>{ @client.Address}</td>";
-                result += $"<td class=\"act\"><form action=\"/Client/Delete/ "+ @client.Id + 
-                          "\" method=\"post\"><a class=\"btn btn-sm btn-primary\" href=\"/Client/Edit/" + client.Id + 
-                          "\">Изменить</a><button type = \"submit\" class=\"btn btn-sm btn-danger\">Удалить</button></form></td>";
+                result +=
+                    $"<td style=\"padding-right:10px\"><a href=\"/Client/Edit/{client.Id}\">Edit</a></td>";
+                result +=
+                    $"<td style=\"padding-right:10px\"><a href=\"/Client/Delete/{client.Id}\">Delete</a></td>";           
+                result += $"<td style=\"padding-right:10px\"><a href=\"/Client/More/{client.Id}\">Detail</a></td>";                   
+                result += "</tr>";
+            }
+            return new HtmlString(result);
+        }
+
+
+        public static HtmlString CreateTourKindsList(this IHtmlHelper html, IEnumerable<TourKind> tourKinds)
+        {
+            string result = "";
+            foreach (TourKind @tourKind in tourKinds)
+            {
+                result += "<tr>";
+                result += $"<td>{tourKind.Name}</td>";
+                result += $"<td>{ tourKind.Description}</td>";
+                result += $"<td>{ tourKind.Constraints}</td>";
+                result +=
+                    $"<td style=\"padding-right:10px\"><a href=\"/TourKind/Edit/{tourKind.Id}\">Edit</a></td>";
+                result +=
+                    $"<td style=\"padding-right:10px\"><a href=\"/TourKind/Delete/{tourKind.Id}\">Delete</a></td>";
+                result += $"<td style=\"padding-right:10px\"><a href=\"/TourKind/More/{tourKind.Id}\">Detail</a></td>";
+                result += "</tr>";
+            }
+            return new HtmlString(result);
+        }
+
+        public static HtmlString CreateToursList(this IHtmlHelper html, IEnumerable<Tour> tours)
+        {
+            string result = "";
+            foreach (Tour @tour in tours)
+            {
+                result += "<tr>";
+                result += $"<td>{tour.Name}</td>";
+                result += $"<td>{tour.Price}</td>";
+                result += $"<td>{tour.StartDate.ToShortDateString()}</td>";
+                result += $"<td>{tour.EndDate.ToShortDateString()}</td>";
+                result += $"<td>{tour.TourKind.Name }</td>";
+                result += $"<td>{tour.Client.Name}</td>";
+                result +=
+                    $"<td style=\"padding-right:10px\"><a href=\"/Tour/Edit/{tour.Id}\">Edit</a></td>";
+                result +=
+                    $"<td style=\"padding-right:10px\"><a href=\"/Tour/Delete/{tour.Id}\">Delete</a></td>";
+                result += $"<td style=\"padding-right:10px\"><a href=\"/Tour/More/{tour.Id}\">Detail</a></td>";
                 result += "</tr>";
             }
             return new HtmlString(result);

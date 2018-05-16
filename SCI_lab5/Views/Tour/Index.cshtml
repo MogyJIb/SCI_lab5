@@ -1,5 +1,7 @@
-﻿@model SCI_lab5.ViewModels.TourViewModel
+﻿@using SCI_lab5.Helpers
+@model SCI_lab5.ViewModels.TourViewModel
 @addTagHelper "SCI_lab5.Helpers.PageLinkTagHelper, SCI_lab5"
+@addTagHelper "SCI_lab5.Helpers.TableHelter, SCI_lab5"
 @{
     ViewData["Title"] = "Tours";
 }
@@ -56,17 +58,9 @@
             </a>
         </th>
     </tr>
-    @foreach (var tour in Model.Tours)
-    {
-        <tr>
-            <td>@tour.Name</td>
-            <td>@tour.Price</td>
-            <td>@tour.StartDate.ToShortDateString()</td>
-            <td>@tour.EndDate.ToShortDateString()</td>
-            <td>@tour.TourKind.Name</td>
-            <td>@tour.Client.Name</td>
-        </tr>
-    }
+
+
+    @Html.CreateToursList(Model.Tours)
 
 </table>
 

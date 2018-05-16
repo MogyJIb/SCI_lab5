@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using SCI_lab5.Extensions.Filters;
 using System;
+using System.Diagnostics;
+using Microsoft.EntityFrameworkCore;
 
 namespace SCI_lab5.Controllers
 {
@@ -87,6 +89,152 @@ namespace SCI_lab5.Controllers
 
             return View("Index",viewModel);
         }
+
+        // GET: Brands/Edit/5
+        public IActionResult Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var client = getClientById(id);
+
+            if (client == null)
+            {
+                return NotFound();
+            }
+
+            return View(client);
+        }
+
+
+        // POST: Brands/Edit/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit( Client client)
+        {
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _db.Update(client);
+                    _db.SaveChanges();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!ClientsExists(client.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction("Index");
+            }
+            return View(client);
+        }
+
+
+        // GET: Brands/Create
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        // POST: Brands/Create
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Create(Client client)
+        {
+            if (ModelState.IsValid)
+            {
+                if (ClientsExists(client.Id))
+                {
+                    return View(client);
+                }
+                _db.Add(client);
+                _db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+
+            return View(client);
+        }
+
+
+        // GET: Brands/Details/5
+        public IActionResult More(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var client = getClientById(id);
+
+            if (client == null)
+            {
+                return NotFound();
+            }
+
+            return View(client);
+        }
+
+
+
+        // GET: Brands/Delete/5
+        public IActionResult Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var client = getClientById(id);
+
+            if (client == null)
+            {
+                return NotFound();
+            }
+
+            return View(client);
+        }
+
+        // POST: Brands/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public IActionResult DeleteConfirmed(int Id)
+        {
+            var client = getClientById(Id);
+            _db.Clients.RemoveRange(client);
+            var tours = _db.Tours.Where(c => c.ClientId == Id);
+            _db.Tours.RemoveRange(tours);
+            _db.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
+        private bool ClientsExists(int id)
+        {
+            return _db.Clients.Any(e => e.Id == id);
+        }
+
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        private Client getClientById(int? id)
+        {
+            return _db.Clients.Where(e => e.Id == id).ToList()[0];
+        }
+
 
         private void SetClients(ClientViewModel viewModel, int pageNumber)
         {
