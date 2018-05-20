@@ -9,7 +9,7 @@
         <hr />
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div class="form-group">
-            <label asp-for="Client.Name" class="control-label col-md-2"></label>
+            <label asp-for="Client.Name" class="control-label col-md-2"> Client</label>
             <div class="col-md-10">
                 <select asp-for="ClientId" class="form-control" asp-items="ViewBag.ClientId"></select>
                 <span asp-validation-for="ClientId" class="text-danger"></span>
@@ -17,12 +17,13 @@
         </div>
 
         <div class="form-group">
-            <label asp-for="TourKind.Name" class="control-label col-md-2"></label>
+            <label asp-for="TourKind.Name" class="control-label col-md-2"> Tour kind</label>
             <div class="col-md-10">
                 <select asp-for="TourKindId" class="form-control" asp-items="ViewBag.TourKindId"></select>
                 <span asp-validation-for="TourKindId" class="text-danger"></span>
             </div>
         </div>
+
 
         <div class="form-group">
             <label asp-for="Name" class="col-md-2 control-label"></label>
@@ -32,7 +33,7 @@
             </div>
         </div>
 
-       
+
 
         <div class="form-group">
             <label asp-for="Price" class="col-md-2 control-label"></label>
@@ -55,6 +56,13 @@
             <div class="col-md-10">
                 <input asp-for="EndDate" class="form-control" />
                 <span asp-validation-for="EndDate" class="text-danger"></span>
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Add" class="btn btn-warning" />
             </div>
         </div>
 

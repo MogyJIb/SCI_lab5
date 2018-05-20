@@ -1,0 +1,21 @@
+/COM,ANSYS RELEASE Release 19.0      BUILD 19.0      UP20171214       01:33:34
+
+ *** ERROR ***                           CP =       0.312   TIME= 01:33:55
+ Data file F:\Studies\Sixth\SCI\labs\lab5\SCI_lab5\SCI_lab5\toursIS.db   
+ has incorrect format, is missing READ/WRITE permission, or is empty     
+ for RESUME.                                                             
+
+ *** WARNING ***                         CP =       0.312   TIME= 01:33:55
+ WHILE PROCESSING FILE BASED INPUT (/INPUT OR MACRO) AN ERROR HAS        
+ OCCURRED.  SHOULD INPUT PROCESSING BE SUSPENDED?                        
+
+ *** ERROR ***                           CP =       0.391   TIME= 01:53:12
+ An unexpected error ( SIG$BREAK ) has occurred...  ANSYS internal data  
+ has been corrupted.  ANSYS is unable to recover and will terminate.     
+ Previously saved files are unaffected.  Please send the data leading    
+ to this operation to your technical support provider, as this will      
+ allow ANSYS, Inc to improve the program.                                
+
+ *** WARNING ***                         CP =       0.406   TIME= 01:53:12
+ WHILE PROCESSING FILE BASED INPUT (/INPUT OR MACRO) AN ERROR HAS        
+ OCCURRED.  SHOULD INPUT PROCESSING BE SUSPENDED?                        

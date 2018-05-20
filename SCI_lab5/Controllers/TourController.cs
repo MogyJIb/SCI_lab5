@@ -100,8 +100,8 @@ namespace SCI_lab5.Controllers
             {
                 return NotFound();
             }
-            ViewData["TourKindId"] = new SelectList(_db.TourKinds, "TourKindId", "Name", tour.TourKindId);
-            ViewData["ClientId"] = new SelectList(_db.Clients, "ClientId", "Name", tour.ClientId);
+            ViewData["TourKindId"] = new SelectList(_db.TourKinds, "Id", "Name", tour.TourKindId);
+            ViewData["ClientId"] = new SelectList(_db.Clients, "Id", "Name", tour.ClientId);
 
 
             return View(tour);
@@ -137,8 +137,8 @@ namespace SCI_lab5.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewData["TourKindId"] = new SelectList(_db.TourKinds, "TourKindId", "Name", tour.TourKindId);
-            ViewData["ClientId"] = new SelectList(_db.Clients, "ClientId", "Name", tour.ClientId);
+            ViewData["TourKindId"] = new SelectList(_db.TourKinds, "Id", "Name", tour.TourKindId);
+            ViewData["ClientId"] = new SelectList(_db.Clients, "Id", "Name", tour.ClientId);
 
             return View(tour);
         }
@@ -147,8 +147,8 @@ namespace SCI_lab5.Controllers
         // GET: Brands/Create
         public IActionResult Create()
         {
-            ViewData["TourKindId"] = new SelectList(_db.TourKinds, "TourKindId", "Name");
-            ViewData["ClientId"] = new SelectList(_db.Clients, "ClientId", "Name");
+            ViewData["TourKindId"] = new SelectList(_db.TourKinds, "Id", "Name");
+            ViewData["ClientId"] = new SelectList(_db.Clients, "Id", "Name");
 
             return View();
         }
@@ -170,8 +170,8 @@ namespace SCI_lab5.Controllers
                 _db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewData["TourKindId"] = new SelectList(_db.TourKinds, "TourKindId", "Name", tour.TourKindId);
-            ViewData["ClientId"] = new SelectList(_db.Clients, "ClientId", "Name", tour.ClientId);
+            ViewData["TourKindId"] = new SelectList(_db.TourKinds, "Id", "Name", tour.TourKindId);
+            ViewData["ClientId"] = new SelectList(_db.Clients, "Id", "Name", tour.ClientId);
 
             return View(tour);
         }
